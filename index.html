@@ -49,7 +49,21 @@
             padding: 70px 20px 60px;
             text-align: center;
             position: relative;
-            overflow: hidden;
+            overflow: hidden; /* clips identity as it slides out */
+        }
+
+        /* ── HEADER IDENTITY — slides left on scroll ── */
+        .header-identity {
+            position: relative;
+            z-index: 1;
+            will-change: transform, opacity;
+            transition: none;
+        }
+
+        /* ── INTRO INNER — slides right on scroll ── */
+        .intro-inner {
+            will-change: transform, opacity;
+            transition: none;
         }
 
         header::before {
@@ -157,6 +171,7 @@
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.7s ease, transform 0.7s ease;
+            overflow: hidden;
         }
         .intro-section.visible { opacity: 1; transform: translateY(0); }
 
@@ -441,6 +456,220 @@
         footer p { font-size: 0.88rem; margin-top: 4px; }
         footer .accent { color: var(--accent); }
 
+        /* ── HIRE ME FLOATING BUTTON ── */
+        .hire-btn {
+            position: fixed;
+            bottom: 36px;
+            right: 36px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent);
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 14px 24px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 28px rgba(233,69,96,0.5);
+            transition: transform 0.25s cubic-bezier(.17,.67,.37,1.35),
+                        box-shadow 0.25s ease,
+                        background 0.2s ease;
+            animation: hirePulse 2.8s ease-in-out infinite;
+        }
+        .hire-btn:hover {
+            transform: scale(1.07) translateY(-3px);
+            box-shadow: 0 12px 36px rgba(233,69,96,0.65);
+            animation: none;
+        }
+        .hire-btn svg { flex-shrink: 0; }
+
+        @keyframes hirePulse {
+            0%, 100% { box-shadow: 0 6px 28px rgba(233,69,96,0.45); }
+            50%       { box-shadow: 0 6px 36px rgba(233,69,96,0.75); }
+        }
+
+        /* ── MODAL OVERLAY ── */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(10,8,25,0.72);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 48px 40px 40px;
+            width: min(640px, 94vw);
+            position: relative;
+            transform: translateY(24px) scale(0.96);
+            transition: transform 0.35s cubic-bezier(.17,.67,.37,1.25);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.28);
+            text-align: center;
+        }
+        .modal-overlay.open .modal-box {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 18px;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: #f0ede8;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            color: var(--muted);
+            transition: background 0.2s, color 0.2s;
+        }
+        .modal-close:hover { background: var(--accent); color: #fff; }
+
+        .modal-avatar {
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #f9a825);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+        .modal-sub {
+            font-size: 0.88rem;
+            color: var(--muted);
+            margin-bottom: 32px;
+        }
+
+        .contact-row {
+            display: grid;
+            grid-template-columns: 42px 1fr 80px 120px;
+            align-items: center;
+            gap: 12px;
+            background: #f7f4f0;
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            transition: background 0.2s;
+        }
+        .contact-row:hover { background: #f0ebe3; }
+
+        .action-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 0;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            text-decoration: none;
+            background: var(--primary);
+            color: #fff;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .action-btn:hover { transform: translateY(-2px); background: var(--accent); }
+        .action-btn.whatsapp { background: #25d366; }
+        .action-btn.whatsapp:hover { background: #1ebe5d; }
+
+        .contact-icon {
+            width: 42px; height: 42px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+        .contact-icon.email { background: #fde8ec; }
+        .contact-icon.phone { background: #e8f4fd; }
+
+        .contact-meta { min-width: 0; text-align: left; }
+        .contact-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+            margin-bottom: 2px;
+            text-align: left;
+        }
+        .contact-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: left;
+        }
+
+        .copy-btn {
+            width: 100%;
+            background: none;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            padding: 8px 0;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
+            text-align: center;
+            white-space: nowrap;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+        .copy-btn:hover  { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .copy-btn.copied { background: #22c55e; color: #fff; border-color: #22c55e; }
+
+        .modal-divider {
+            display: flex; align-items: center; gap: 12px;
+            margin: 20px 0 18px;
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+        .modal-divider::before, .modal-divider::after {
+            content: ''; flex: 1; height: 1px; background: #e8e4df;
+        }
+
+        .modal-mailto {
+            display: block;
+            background: var(--primary);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .modal-mailto:hover { background: var(--accent); transform: translateY(-2px); }
+
+
         /* ── SCROLL REVEAL utility ── */
         .reveal {
             opacity: 0;
@@ -535,22 +764,24 @@
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
 
-        <!-- Circular Profile Photo -->
-        <div class="profile-wrapper">
-            <div class="profile-ring">
-                <img class="profile-photo" src="" alt="Uday Singh Tonk"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                <div class="profile-photo" style="display:none; align-items:center; justify-content:center; font-size:2.6rem;"></div>
+        <!-- Header identity — slides left + fades on scroll -->
+        <div class="header-identity">
+            <div class="profile-wrapper">
+                <div class="profile-ring">
+                    <img class="profile-photo" src="" alt="Uday Singh Tonk"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="profile-photo" style="display:none; align-items:center; justify-content:center; font-size:2.6rem;"></div>
+                </div>
             </div>
-        </div>
 
-        <h1>Uday Singh <span>Tonk</span></h1>
-        <p class="tagline">Graphic Designer · Visual Storyteller · Brand Craftsman</p>
+            <h1>Uday Singh <span>Tonk</span></h1>
+            <p class="tagline">Graphic Designer · Visual Storyteller · Brand Craftsman</p>
 
-        <div class="contact-bar">
-            <a href="mailto:tonk.visualdesigns@gmail.com">tonk.visualdesigns@gmail.com</a>
-            <span>+91 93150 14018</span>
-            <span>Available for Freelance</span>
+            <div class="contact-bar">
+                <!-- <a href="mailto:tonk.visualdesigns@gmail.com">tonk.visualdesigns@gmail.com</a> -->
+                <!-- <span>+91 93150 14018</span> -->
+                <span>Available for Freelance</span>
+            </div>
         </div>
     </header>
 
@@ -813,6 +1044,50 @@
         <p style="margin-top:14px; font-size:0.82rem; opacity:0.45;">&copy; 2026 · All rights reserved</p>
     </footer>
  
+    <!-- ═══════════════════════════ HIRE ME BUTTON ═══════════════════════════ -->
+    <button class="hire-btn" id="hireMeBtn" aria-label="Hire Me">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+        </svg>
+        Let's Create
+    </button>
+
+    <!-- ═══════════════════════════ HIRE ME MODAL ═══════════════════════════ -->
+    <div class="modal-overlay" id="hireModal" role="dialog" aria-modal="true" aria-label="Contact Uday">
+        <div class="modal-box">
+            <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+
+            <div class="modal-avatar">🎨</div>
+            <h2 class="modal-title">Let's Work Together</h2>
+            <p class="modal-sub">Reach out — I'm open to freelance &amp; collaborations.</p>
+
+            <!-- Email -->
+            <div class="contact-row">
+                <div class="contact-icon email">📧</div>
+                <div class="contact-meta">
+                    <div class="contact-label">Email</div>
+                    <div class="contact-value">tonk.visualdesigns@gmail.com</div>
+                </div>
+                <button class="copy-btn" data-copy="tonk.visualdesigns@gmail.com">Copy</button>
+                <a class="action-btn" href="mailto:tonk.visualdesigns@gmail.com?subject=Let's%20Collaborate!" title="Open Mail">✉️ Mail</a>
+            </div>
+
+            <!-- WhatsApp -->
+            <div class="contact-row">
+                <div class="contact-icon phone">💬</div>
+                <div class="contact-meta">
+                    <div class="contact-label">Phone</div>
+                    <div class="contact-value">+91 93150 14018</div>
+                </div>
+                <button class="copy-btn" data-copy="+919315014018">Copy</button>
+                <a class="action-btn whatsapp" href="https://wa.me/919315014018" target="_blank" rel="noopener" title="Open WhatsApp">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.134.558 4.133 1.535 5.867L.057 23.926a.5.5 0 0 0 .614.614l6.059-1.478A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.153-1.424l-.36-.214-3.742.912.932-3.742-.234-.374A9.956 9.956 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+                    WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- ═══════════════════════════ SCRIPTS ═══════════════════════════ -->
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Custom cursor
@@ -872,6 +1147,68 @@
                     rotateY(0deg)
                     scale(1)
                 `;
+            });
+        });
+
+        // ── Hire Me modal ──
+        const hireBtn   = document.getElementById('hireMeBtn');
+        const hireModal = document.getElementById('hireModal');
+        const modalClose = document.getElementById('modalClose');
+
+        function openModal() {
+            hireModal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            hireModal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        hireBtn.addEventListener('click', openModal);
+        modalClose.addEventListener('click', closeModal);
+        hireModal.addEventListener('click', e => { if (e.target === hireModal) closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        // ── Parallax scroll effects ──
+        const headerIdentity = document.querySelector('.header-identity');
+        const introInner     = document.querySelector('.intro-inner');
+        const introSection   = document.querySelector('.intro-section');
+
+        window.addEventListener('scroll', () => {
+            const offset = window.scrollY;
+
+            // Header — slides LEFT and fades out
+            headerIdentity.style.transform = `translateX(-${offset * 0.4}px)`;
+            headerIdentity.style.opacity   = Math.max(0, 1 - offset * 0.003);
+
+            // About / Intro — slides RIGHT only when 70% of section has been scrolled past
+            const introTop    = introSection.offsetTop;
+            const introHeight = introSection.offsetHeight;
+            // trigger point = when only 30% of the section remains visible
+            const triggerAt   = introTop + introHeight * 0.4;
+            const introRelative = offset - triggerAt;
+
+            if (introRelative > 0) {
+                introInner.style.transform = `translateX(${introRelative * 0.4}px)`;
+                introInner.style.opacity   = Math.max(0, 1 - introRelative * 0.003);
+            } else {
+                introInner.style.transform = 'translateX(0)';
+                introInner.style.opacity   = '1';
+            }
+        }, { passive: true });
+
+        // Copy-to-clipboard buttons
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                navigator.clipboard.writeText(btn.dataset.copy).then(() => {
+                    const orig = btn.textContent;
+                    btn.textContent = 'Copied ✓';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = orig;
+                        btn.classList.remove('copied');
+                    }, 2000);
+                });
             });
         });
     </script>
